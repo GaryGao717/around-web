@@ -1,11 +1,11 @@
 import React from 'react';
 import $ from 'jquery';
-import { Tabs, Button, Spin } from 'antd';
+import { Tabs, Spin } from 'antd';
 import { GEO_OPTIONS, POS_KEY, AUTH_PREFIX, TOKEN_KEY, API_ROOT } from '../constants';
 import { Gallery } from './Gallery';
+import { CreatePostButton } from './CreatePostButton';
 
 const TabPane = Tabs.TabPane;
-// const operations = <Button>Extra Action</Button>;
 
 export class Home extends React.Component {
     state = {
@@ -70,11 +70,9 @@ export class Home extends React.Component {
     }
 
     loadNearbyPosts = () => {
-        //const { lat, lon } = JSON.parse(localStorage.getItem(POS_KEY));
-        const lat = 37.7915953;
-        const lon = -122.3937977;
+        const { lat, lon } = JSON.parse(localStorage.getItem(POS_KEY));
         this.setState({ loadingPosts: true, error: ''});
-        $.ajax({
+        return $.ajax({
             url: `${API_ROOT}/search?lat=${lat}&lon=${lon}&range=20`,
             method: 'GET',
             headers: {
@@ -92,9 +90,10 @@ export class Home extends React.Component {
     }
 
     render() {
-        const operations = <Button type="primary"> Create New Post</Button>
+        const createPostButton = <CreatePostButton loadNearbyPosts={this.loadNearbyPosts}/>;
+
         return (
-            <Tabs tabBarExtraContent={operations} className="main-tabs">
+            <Tabs tabBarExtraContent={createPostButton} className="main-tabs">
                 <TabPane tab="Posts" key="1">
                     {this.getGalleryPanelContent()}
                 </TabPane>
